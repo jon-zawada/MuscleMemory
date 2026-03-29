@@ -1,5 +1,4 @@
 {
-  "exclude": ["eslint.config.mts"],
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
