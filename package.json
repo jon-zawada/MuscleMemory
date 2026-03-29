@@ -1,0 +1,12 @@
+{
+  "name": "musclememory",
+  "version": "1.0.0",
+  "description": "Exercise tracking app",
+  "license": "MIT",
+  "author": "Jon Zawada",
+  "type": "commonjs",
+  "main": "index.ts",
+  "scripts": {
+
+  }
+}
