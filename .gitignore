@@ -4,3 +4,4 @@ dist/
 build/
 coverage/
 plan.md
+.env
