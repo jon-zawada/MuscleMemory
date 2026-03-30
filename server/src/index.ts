@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import type { Request, Response } from "express";
 import { logger } from "./utils/logger";
+
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const app = express();
