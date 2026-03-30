@@ -7,6 +7,11 @@
   "type": "commonjs",
   "main": "index.ts",
   "scripts": {
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
+    "db:logs": "docker compose logs -f",
+    "lint": "eslint client/src server/src",
+    "format": "prettier --write client/src server/src",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -17,6 +22,12 @@
     "server/src/**/*.ts": [
       "prettier --write",
       "eslint"
+    ],
+    "server/src/**/*.sql": [
+      "prettier --write"
+    ],
+    "**/*.json": [
+      "prettier --write"
     ]
   },
   "devDependencies": {
@@ -32,6 +43,7 @@
     "jiti": "^2.6.1",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
+    "prettier-plugin-sql": "^0.20.0",
     "typescript-eslint": "^8.57.2"
   }
 }

@@ -16,4 +16,10 @@ export default defineConfig([
   pluginReact.configs.flat['jsx-runtime'],
   reactHooks.configs.flat['recommended-latest'],
   { settings: { react: { version: 'detect' } } },
+  {
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'warn',
+      'no-console': 'warn',
+    },
+  },
 ]);
