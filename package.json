@@ -10,6 +10,8 @@
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
     "db:logs": "docker compose logs -f",
+    "lint": "eslint client/src server/src",
+    "format": "prettier --write client/src server/src",
     "prepare": "husky"
   },
   "lint-staged": {
