@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { isValidEmail, isValidPassword } from "../utils/validation/validate";
-import { logger } from "../utils/logger";
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import { Pool } from "pg";
 import { UserRepo } from "../repositories/UserRepo";
-import jwt from "jsonwebtoken";
 import { isPostgresError } from "../utils/db";
+import { logger } from "../utils/logger";
+import { isValidEmail, isValidPassword } from "../utils/validation/validate";
 
 class AuthController {
   private userRepo: UserRepo;
