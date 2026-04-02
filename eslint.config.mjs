@@ -20,6 +20,7 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'warn',
       'no-console': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
     },
   },
 ]);
