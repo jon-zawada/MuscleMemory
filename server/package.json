@@ -8,19 +8,23 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --import ./src/preload.ts src/index.ts",
     "db:migrate": "tsx ./src/db/migrate.ts"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
     "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0"
   }
 }
