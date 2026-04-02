@@ -1,7 +1,7 @@
 import express from "express";
+import pool from "./db";
 import authRouter from "./routes/authRoutes";
 import { logger } from "./utils/logger";
-import pool from "./db";
 
 const app = express();
 const PORT = process.env.PORT || 3000;

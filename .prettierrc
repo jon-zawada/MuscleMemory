@@ -4,5 +4,8 @@
   "trailingComma": "all",
   "printWidth": 100,
   "tabWidth": 2,
-  "plugins": ["prettier-plugin-sql"]
+  "plugins": ["prettier-plugin-sql", "@trivago/prettier-plugin-sort-imports"],
+  "importOrder": ["^(express|pg|bcrypt|jsonwebtoken|dotenv|path|fs)(.*)$", "<THIRD_PARTY_MODULES>", "^[./]"],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true
 }

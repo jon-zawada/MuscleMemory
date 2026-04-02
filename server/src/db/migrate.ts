@@ -1,7 +1,7 @@
-import { Client } from "pg";
 import dotenv from "dotenv";
-import path from "path";
 import fs from "fs";
+import path from "path";
+import { Client } from "pg";
 import { logger } from "../utils/logger";
 
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
