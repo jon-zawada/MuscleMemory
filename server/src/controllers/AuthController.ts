@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Pool } from "pg";
+import { StringValue } from "ms";
+import { config } from "../config";
 import { UserRepo } from "../repositories/UserRepo";
 import { isPostgresError } from "../utils/db";
 import { logger } from "../utils/logger";
@@ -54,9 +56,9 @@ class AuthController {
         return;
       }
       const { passwordHash: _, ...safeUser } = potentialUser;
-      const token = jwt.sign(safeUser, process.env.JWT_SECRET!, {
+      const token = jwt.sign(safeUser, config.jwtSecret, {
         algorithm: "HS256",
-        expiresIn: "7d",
+        expiresIn: config.jwtExpiresIn as StringValue,
       });
 
       res.status(200).json({ message: "Login successful", token });

@@ -14,7 +14,7 @@ const start = async (): Promise<void> => {
   await pool.query("SELECT 1");
   logger.info("[SERVER] Connected to PSQL");
   app.listen(PORT, () => {
-    logger.log(`[SERVER] listening on port ${PORT}`);
+    logger.log(`[SERVER] Muscle Memory serving on port ${PORT}`);
   });
 };
 
