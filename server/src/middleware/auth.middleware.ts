@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError } from "jsonwebtoken";
 import { config } from "../config";
-import { User } from "../types/user";
+import { User, UserRole } from "../types/user";
 
 export const jwtMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers["authorization"];
@@ -31,4 +31,19 @@ export const jwtMiddleware = (req: Request, res: Response, next: NextFunction): 
       return;
     }
   }
+};
+
+export const requireRoleMiddleware = (role: UserRole) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    if (role !== req.user.role) {
+      res.status(403).json({ error: "Insufficient permissions" });
+      return;
+    }
+    next();
+  };
 };
