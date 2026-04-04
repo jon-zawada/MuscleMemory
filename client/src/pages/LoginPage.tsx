@@ -23,11 +23,13 @@ const LoginPage = (): JSX.Element => {
     try {
       const res = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...inputs }),
       });
+      if (!res.ok) return;
       const jsonRes = await res.json();
       const { token } = jsonRes;
       login(token);
