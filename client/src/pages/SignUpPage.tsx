@@ -13,13 +13,14 @@ const SignupPage = (): JSX.Element => {
   const submitHandler = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      await fetch("http://localhost:3001/api/auth/signup", {
+      const res = await fetch("http://localhost:3001/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...inputs }),
       });
+      if (!res.ok) return;
       navigate("/login");
     } catch (error) {
       // TODO: something
