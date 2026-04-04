@@ -1,5 +1,6 @@
 import { type JSX, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../api/apiClient";
 
 const SignupPage = (): JSX.Element => {
   const [inputs, setInputs] = useState({ email: "", username: "", password: "", role: "athlete" });
@@ -13,14 +14,7 @@ const SignupPage = (): JSX.Element => {
   const submitHandler = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3001/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...inputs }),
-      });
-      if (!res.ok) return;
+      await apiClient.post("/auth/signup", { ...inputs });
       navigate("/login");
     } catch (error) {
       // TODO: something

@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { type JSX, createContext, useContext, useEffect, useState } from "react";
+import apiClient from "../api/apiClient";
 import type { User } from "../types/user";
 
 interface AuthContextType {
@@ -23,10 +24,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
 
   const logout = async (): Promise<void> => {
     try {
-      await fetch("http://localhost:3001/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await apiClient.post("/auth/logout");
       setUser(null);
       setAccessToken(null);
     } catch (error) {
@@ -37,12 +35,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
   useEffect(() => {
     const silentRefresh = async (): Promise<void> => {
       try {
-        const res = await fetch("http://localhost:3001/api/auth/refresh", {
-          method: "POST",
-          credentials: "include",
-        });
-        if (!res.ok) return;
-        const { token } = await res.json();
+        const res = await apiClient.post("/auth/refresh");
+        const { token } = res.data;
         login(token);
       } catch (error) {
         // network error, do nothing
