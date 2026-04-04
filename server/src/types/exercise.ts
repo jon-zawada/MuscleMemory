@@ -4,7 +4,7 @@ export interface Exercise {
   type: ExerciseType;
   muscleGroup: string;
   isCustom: boolean;
-  createdBy: string;
+  createdBy: string | null;
 }
 
 export type ExerciseType = "strength" | "cardio" | "bodyweight";
