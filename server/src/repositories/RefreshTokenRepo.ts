@@ -15,7 +15,7 @@ export class RefreshTokenRepo {
     await this.pool.query(query, [refreshToken, userId, expiresAt]);
     return refreshToken;
   };
-  findByToken = async (token: string): Promise<RefreshToken> => {
+  findByToken = async (token: string): Promise<RefreshToken | undefined> => {
     const query = `SELECT id, token, user_id AS "userId", expires_at AS "expiresAt", created_at AS "createdAt" FROM refresh_tokens WHERE token = $1`;
     const result = await this.pool.query(query, [token]);
     return result.rows[0];

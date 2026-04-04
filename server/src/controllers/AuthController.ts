@@ -123,6 +123,15 @@ class AuthController {
   logout = async (req: Request, res: Response): Promise<void> => {
     try {
       const refreshToken = req.cookies[REFRESH_TOKEN];
+      if (!refreshToken) {
+        res.status(401).json({ error: "No refresh token provided" });
+        return;
+      }
+      const storedToken = await this.refreshTokenRepo.findByToken(refreshToken);
+      if (!storedToken) {
+        res.status(401).json({ error: "Invalid refresh token" });
+        return;
+      }
       await this.refreshTokenRepo.deleteToken(refreshToken);
       res.clearCookie(REFRESH_TOKEN);
       res.status(200).json({ message: "Logged out successfully" });
