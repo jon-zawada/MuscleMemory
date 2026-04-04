@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { Pool } from "pg";
 import { StringValue } from "ms";
 import { config } from "../config";
+import { REFRESH_TOKEN } from "../constants/cookies";
+import { RefreshTokenRepo } from "../repositories/RefreshTokenRepo";
 import { UserRepo } from "../repositories/UserRepo";
 import { isPostgresError } from "../utils/db";
 import { logger } from "../utils/logger";
@@ -11,8 +13,10 @@ import { isValidEmail, isValidPassword } from "../utils/validation/validate";
 
 class AuthController {
   private userRepo: UserRepo;
+  private refreshTokenRepo: RefreshTokenRepo;
   constructor(pool: Pool) {
     this.userRepo = new UserRepo(pool);
+    this.refreshTokenRepo = new RefreshTokenRepo(pool);
   }
 
   signUp = async (req: Request, res: Response): Promise<void> => {
@@ -60,8 +64,78 @@ class AuthController {
         algorithm: "HS256",
         expiresIn: config.jwtExpiresIn as StringValue,
       });
+      await this.refreshTokenRepo.deleteTokensByUserId(safeUser.id);
+      const refreshToken = await this.refreshTokenRepo.createToken(safeUser.id);
+      res.cookie(REFRESH_TOKEN, refreshToken, {
+        httpOnly: true,
+        secure: config.nodeEnv === "production",
+        sameSite: "strict",
+      });
 
       res.status(200).json({ message: "Login successful", token });
+    } catch (error) {
+      logger.error("[SERVER]" + error);
+      res.status(500).json({ error: "Internal Server error" });
+    }
+  };
+
+  refresh = async (req: Request, res: Response): Promise<void> => {
+    const refreshToken = req.cookies[REFRESH_TOKEN];
+    if (!refreshToken) {
+      res.status(401).json({ error: "No refresh token provided" });
+      return;
+    }
+
+    try {
+      const storedRefToken = await this.refreshTokenRepo.findByToken(refreshToken);
+      if (!storedRefToken) {
+        res.status(401).json({ error: "No token found" });
+        return;
+      }
+      const { expiresAt, userId } = storedRefToken;
+      if (expiresAt < new Date()) {
+        await this.refreshTokenRepo.deleteToken(refreshToken);
+        res.status(403).json({ error: "Expired Token" });
+        return;
+      }
+      const user = await this.userRepo.getUserById(userId);
+      if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+      const token = jwt.sign(user, config.jwtSecret, {
+        algorithm: "HS256",
+        expiresIn: config.jwtExpiresIn as StringValue,
+      });
+      await this.refreshTokenRepo.deleteToken(refreshToken);
+      const newRefreshToken = await this.refreshTokenRepo.createToken(user.id);
+      res.cookie(REFRESH_TOKEN, newRefreshToken, {
+        httpOnly: true,
+        secure: config.nodeEnv === "production",
+        sameSite: "strict",
+      });
+      res.status(200).json({ message: "Token refreshed", token });
+    } catch (error) {
+      logger.error("[SERVER]" + error);
+      res.status(500).json({ error: "Internal Server error" });
+    }
+  };
+
+  logout = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const refreshToken = req.cookies[REFRESH_TOKEN];
+      if (!refreshToken) {
+        res.status(401).json({ error: "No refresh token provided" });
+        return;
+      }
+      const storedToken = await this.refreshTokenRepo.findByToken(refreshToken);
+      if (!storedToken) {
+        res.status(401).json({ error: "Invalid refresh token" });
+        return;
+      }
+      await this.refreshTokenRepo.deleteToken(refreshToken);
+      res.clearCookie(REFRESH_TOKEN);
+      res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
       logger.error("[SERVER]" + error);
       res.status(500).json({ error: "Internal Server error" });

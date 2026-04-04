@@ -5,10 +5,9 @@ import pool from "../db";
 const authController = new AuthController(pool);
 const router = Router();
 
-// POST /auth/signup
 router.post("/signup", authController.signUp);
-
-// POST /auth/login
 router.post("/login", authController.login);
+router.post("/refresh", authController.refresh);
+router.post("/logout", authController.logout);
 
 export default router;

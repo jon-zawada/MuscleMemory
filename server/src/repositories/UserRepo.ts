@@ -13,6 +13,12 @@ export class UserRepo {
     return result.rows;
   };
 
+  getUserById = async (userId: string): Promise<User | undefined> => {
+    const query = `SELECT id, email, username, role, created_at AS "createdAt" FROM users WHERE id = $1`;
+    const result = await this.pool.query(query, [userId]);
+    return result.rows[0];
+  };
+
   getUserByEmailForLogin = async (email: string): Promise<AuthUser | undefined> => {
     const query = `SELECT id, email, username, role, created_at AS "createdAt", password_hash AS "passwordHash" FROM users WHERE email = $1`;
     const result = await this.pool.query(query, [email]);

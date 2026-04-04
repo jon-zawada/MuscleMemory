@@ -13,6 +13,7 @@ function requireEnv(key: string): string {
 }
 
 export const config = {
+  nodeEnv: requireEnv("NODE_ENV"),
   databaseUrl: requireEnv("DATABASE_URL"),
   jwtSecret: requireEnv("JWT_SECRET"),
   jwtExpiresIn: requireEnv("JWT_EXPIRES_IN"),
