@@ -18,7 +18,8 @@ const LoginPage = (): JSX.Element => {
     setInputs({ ...inputs, [name]: value });
   };
 
-  const clickHandler = async (): Promise<void> => {
+  const submitHandler = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
     try {
       const res = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
@@ -37,21 +38,23 @@ const LoginPage = (): JSX.Element => {
 
   return (
     <div>
-      <input
-        type="text"
-        name="email"
-        value={inputs.email}
-        onChange={changeHandler}
-        placeholder="email"
-      />
-      <input
-        type="password"
-        name="password"
-        value={inputs.password}
-        onChange={changeHandler}
-        placeholder="*****"
-      />
-      <button onClick={clickHandler}>Submit</button>
+      <form onSubmit={submitHandler}>
+        <input
+          type="email"
+          name="email"
+          value={inputs.email}
+          onChange={changeHandler}
+          placeholder="email"
+        />
+        <input
+          type="password"
+          name="password"
+          value={inputs.password}
+          onChange={changeHandler}
+          placeholder="*****"
+        />
+        <button>Login</button>
+      </form>
     </div>
   );
 };
