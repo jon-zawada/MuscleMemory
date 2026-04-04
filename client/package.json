@@ -22,7 +22,9 @@
     "webpack-dev-server": "^5.2.3"
   },
   "dependencies": {
+    "jwt-decode": "^4.0.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.0"
   }
 }

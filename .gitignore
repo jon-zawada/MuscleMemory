@@ -5,3 +5,4 @@ build/
 coverage/
 plan.md
 .env
+techdebt.md
