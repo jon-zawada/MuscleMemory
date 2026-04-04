@@ -1,5 +1,6 @@
 import { type JSX, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../api/apiClient";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage = (): JSX.Element => {
@@ -21,17 +22,8 @@ const LoginPage = (): JSX.Element => {
   const submitHandler = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3001/api/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...inputs }),
-      });
-      if (!res.ok) return;
-      const jsonRes = await res.json();
-      const { token } = jsonRes;
+      const res = await apiClient.post("/auth/login", { ...inputs });
+      const { token } = res.data;
       login(token);
     } catch (error) {
       // TODO: something
