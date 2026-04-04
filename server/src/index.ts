@@ -1,10 +1,18 @@
 import express from "express";
+import cors from "cors";
 import pool from "./db";
 import authRouter from "./routes/authRoutes";
 import { logger } from "./utils/logger";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true, // need later for httpOnly refresh token cookie
+  }),
+);
 
 app.use(express.json());
 
