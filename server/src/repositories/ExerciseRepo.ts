@@ -35,7 +35,7 @@ export class ExerciseRepo {
     exerciseId: string,
     userId: string,
     updates: Partial<Pick<Exercise, "name" | "type" | "muscleGroup">>,
-  ): Promise<RepoResult> => {
+  ): Promise<Exercise | RepoResult> => {
     if (Object.keys(updates).length === 0) {
       return NO_UPDATES;
     }
@@ -63,9 +63,9 @@ export class ExerciseRepo {
       params.push(updates.muscleGroup);
     }
     params.push(exerciseId);
-    const query = `UPDATE exercises SET ${setClauses.join(", ")} WHERE id = $${paramIndex}`;
-    await this.pool.query(query, params);
-    return OK;
+    const query = `UPDATE exercises SET ${setClauses.join(", ")} WHERE id = $${paramIndex} RETURNING id, name, type, muscle_group AS "muscleGroup", is_custom AS "isCustom", created_by AS "createdBy"`;
+    const result = await this.pool.query(query, params);
+    return result.rows[0];
   };
 
   deleteExercise = async (exerciseId: string, userId: string): Promise<RepoResult> => {
