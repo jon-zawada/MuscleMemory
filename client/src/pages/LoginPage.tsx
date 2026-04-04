@@ -11,7 +11,7 @@ const LoginPage = (): JSX.Element => {
     if (user) {
       navigate(user.role === "athlete" ? "/dashboard" : "/coach/dashboard");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -19,16 +19,20 @@ const LoginPage = (): JSX.Element => {
   };
 
   const clickHandler = async (): Promise<void> => {
-    const res = await fetch("http://localhost:3001/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...inputs }),
-    });
-    const jsonRes = await res.json();
-    const { token } = jsonRes;
-    login(token);
+    try {
+      const res = await fetch("http://localhost:3001/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...inputs }),
+      });
+      const jsonRes = await res.json();
+      const { token } = jsonRes;
+      login(token);
+    } catch (error) {
+      // TODO: something
+    }
   };
 
   return (
