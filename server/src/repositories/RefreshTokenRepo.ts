@@ -25,4 +25,9 @@ export class RefreshTokenRepo {
     const query = `DELETE FROM refresh_tokens WHERE token = $1`;
     await this.pool.query(query, [token]);
   };
+
+  deleteTokensByUserId = async (userId: string): Promise<void> => {
+    const query = `DELETE FROM refresh_tokens WHERE user_id = $1`;
+    await this.pool.query(query, [userId]);
+  };
 }

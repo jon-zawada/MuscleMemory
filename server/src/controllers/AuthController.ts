@@ -64,6 +64,7 @@ class AuthController {
         algorithm: "HS256",
         expiresIn: config.jwtExpiresIn as StringValue,
       });
+      await this.refreshTokenRepo.deleteTokensByUserId(safeUser.id);
       const refreshToken = await this.refreshTokenRepo.createToken(safeUser.id);
       res.cookie(REFRESH_TOKEN, refreshToken, {
         httpOnly: true,
