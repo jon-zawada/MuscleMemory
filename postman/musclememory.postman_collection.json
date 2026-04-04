@@ -30,6 +30,22 @@
               "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"supersecret123\"\n}"
             }
           }
+        },
+        {
+          "name": "Refresh",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "http://localhost:3001/api/auth/refresh" }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "http://localhost:3001/api/auth/logout" }
+          }
         }
       ]
     }
