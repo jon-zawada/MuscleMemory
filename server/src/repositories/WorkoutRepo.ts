@@ -22,14 +22,14 @@ export class WorkoutRepo {
 
   createWorkout = async (
     userId: string,
-    name: string,
     status: WorkoutStatus,
+    name?: string,
     assignedBy?: string,
     notes?: string,
     completedAt?: string,
   ): Promise<void> => {
-    const query = `INSERT INTO workouts (user_id, name, status, assigned_by, notes, completed_at) VALUES ($1, $2, $3, $4, $5, $6)`;
-    await this.pool.query(query, [userId, name, status, assignedBy, notes, completedAt]);
+    const query = `INSERT INTO workouts (user_id, status, name, assigned_by, notes, completed_at) VALUES ($1, $2, $3, $4, $5, $6)`;
+    await this.pool.query(query, [userId, status, name, assignedBy, notes, completedAt]);
   };
 
   updateWorkoutById = async (
