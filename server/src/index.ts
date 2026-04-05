@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
-app.use("/exercises", exerciseRouter);
+app.use("/api/exercises", exerciseRouter);
 
 const start = async (): Promise<void> => {
   await pool.query("SELECT 1");

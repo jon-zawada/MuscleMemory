@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { Pool } from "pg";
 import { NOT_FOUND, NO_UPDATES, UNAUTHORIZED } from "../constants/repoResults";
 import { ExerciseRepo } from "../repositories/ExerciseRepo";
-import { Exercise } from "../types/exercise";
 import { logger } from "../utils/logger";
 
 class ExerciseController {
