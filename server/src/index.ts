@@ -4,6 +4,7 @@ import cors from "cors";
 import pool from "./db";
 import authRouter from "./routes/authRoutes";
 import exerciseRouter from "./routes/exerciseRoutes";
+import workoutRoutes from "./routes/workoutRoutes";
 import { logger } from "./utils/logger";
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/exercises", exerciseRouter);
+app.use("/api/workouts", workoutRoutes);
 
 const start = async (): Promise<void> => {
   await pool.query("SELECT 1");

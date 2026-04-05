@@ -6,3 +6,4 @@ coverage/
 plan.md
 .env
 techdebt.md
+.DS_Store

@@ -230,6 +230,223 @@
           }
         }
       ]
+    },
+    {
+      "name": "Workouts",
+      "item": [
+        {
+          "name": "Get Workouts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts"]
+            }
+          }
+        },
+        {
+          "name": "Get Workouts - No Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts"]
+            }
+          }
+        },
+        {
+          "name": "Create Workout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"name\": \"Leg Day\",\n  \"notes\": \"Focus on quads\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Workout - Missing Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Leg Day\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Workout - Invalid Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"invalid_status\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Workout - Invalid assignedBy UUID",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"assignedBy\": \"not-a-uuid\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Workout",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/{{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "{{workoutId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Leg Day\",\n  \"status\": \"completed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Workout - Empty Body",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/{{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "{{workoutId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Update Workout - Not Owner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{otherToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/{{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "{{workoutId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hacked Workout\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Workout - Not Found",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "00000000-0000-0000-0000-000000000000"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ghost Workout\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Workout",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/{{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "{{workoutId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Workout - Not Owner",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/{{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "{{workoutId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Workout - Not Found",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/workouts/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workouts", "00000000-0000-0000-0000-000000000000"]
+            }
+          }
+        }
+      ]
     }
   ]
 }
