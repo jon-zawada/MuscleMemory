@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Pool } from "pg";
 import { NOT_FOUND, NO_UPDATES, UNAUTHORIZED } from "../constants/repoResults";
 import { ExerciseRepo } from "../repositories/ExerciseRepo";
+import { CreateExerciseBody, UpdateExerciseBody } from "../schemas/exercise.schema";
 import { logger } from "../utils/logger";
 
 class ExerciseController {
@@ -21,12 +22,14 @@ class ExerciseController {
     }
   };
 
-  createExercise = async (req: Request, res: Response): Promise<void> => {
+  createExercise = async (
+    req: Request<object, object, CreateExerciseBody>,
+    res: Response,
+  ): Promise<void> => {
     try {
       const { name, type, muscleGroup } = req.body;
-      // missing type validation
       const userId = req.user!.id;
-      await this.exerciseRepo.createExercise(name, type, muscleGroup, true, userId);
+      await this.exerciseRepo.createExercise(name, type, true, userId, muscleGroup);
       res.status(201).json({ message: "Exercise created" });
     } catch (error) {
       logger.error("[SERVER]" + error);
@@ -34,16 +37,18 @@ class ExerciseController {
     }
   };
 
-  updateExercise = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+  updateExercise = async (
+    req: Request<{ id: string }, object, UpdateExerciseBody>,
+    res: Response,
+  ): Promise<void> => {
     try {
       const userId = req.user!.id;
       const { id: exerciseId } = req.params;
       const { name, type, muscleGroup } = req.body;
-      const result = await this.exerciseRepo.updateExercise(exerciseId, userId, {
-        name,
-        type,
-        muscleGroup,
-      });
+      const updates = Object.fromEntries(
+        Object.entries({ name, type, muscleGroup }).filter(([_, v]) => v !== undefined),
+      );
+      const result = await this.exerciseRepo.updateExercise(exerciseId, userId, updates);
       if (result === NO_UPDATES) {
         res.status(400).json({ error: "Bad request" });
         return;

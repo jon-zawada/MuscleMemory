@@ -23,9 +23,9 @@ export class ExerciseRepo {
   createExercise = async (
     name: string,
     type: ExerciseType,
-    muscleGroup: string,
     isCustom: boolean,
     userId: string,
+    muscleGroup?: string,
   ): Promise<void> => {
     const query = `INSERT INTO exercises (name, type, muscle_group, is_custom, created_by) VALUES ($1, $2, $3, $4, $5)`;
     await this.pool.query(query, [name, type, muscleGroup, isCustom, userId]);
@@ -61,9 +61,6 @@ export class ExerciseRepo {
     if (updates.muscleGroup) {
       setClauses.push(`muscle_group = $${paramIndex++}`);
       params.push(updates.muscleGroup);
-    }
-    if (setClauses.length === 0) {
-      return NO_UPDATES;
     }
     params.push(exerciseId);
     const query = `UPDATE exercises SET ${setClauses.join(", ")} WHERE id = $${paramIndex} RETURNING id, name, type, muscle_group AS "muscleGroup", is_custom AS "isCustom", created_by AS "createdBy"`;
