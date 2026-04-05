@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import pool from "./db";
 import authRouter from "./routes/authRoutes";
+import exerciseRouter from "./routes/exerciseRoutes";
 import { logger } from "./utils/logger";
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
+app.use("/api/exercises", exerciseRouter);
 
 const start = async (): Promise<void> => {
   await pool.query("SELECT 1");

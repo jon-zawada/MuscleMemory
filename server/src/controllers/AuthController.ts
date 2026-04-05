@@ -5,6 +5,7 @@ import { Pool } from "pg";
 import { StringValue } from "ms";
 import { config } from "../config";
 import { REFRESH_TOKEN } from "../constants/cookies";
+import { UNIQUE_VIOLATION } from "../constants/pgErrorCodes";
 import { RefreshTokenRepo } from "../repositories/RefreshTokenRepo";
 import { UserRepo } from "../repositories/UserRepo";
 import { isPostgresError } from "../utils/db";
@@ -35,7 +36,7 @@ class AuthController {
       await this.userRepo.createUser(email, username, passwordHash, role);
       res.status(201).json({ message: "User created successfully" });
     } catch (error) {
-      if (isPostgresError(error) && error.code === "23505") {
+      if (isPostgresError(error) && error.code === UNIQUE_VIOLATION) {
         res
           .status(409)
           .json({ error: "A user with that email or username already exists try again" });

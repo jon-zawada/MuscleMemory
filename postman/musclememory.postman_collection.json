@@ -3,6 +3,12 @@
     "name": "Muscle Memory",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001"
+    }
+  ],
   "item": [
     {
       "name": "Auth",
@@ -12,7 +18,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "http://localhost:3001/api/auth/signup" },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "signup"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"test@example.com\",\n  \"username\": \"testuser\",\n  \"password\": \"supersecret123\",\n  \"role\": \"athlete\"\n}"
@@ -24,7 +34,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "http://localhost:3001/api/auth/login" },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"supersecret123\"\n}"
@@ -36,7 +50,11 @@
           "request": {
             "method": "POST",
             "header": [],
-            "url": { "raw": "http://localhost:3001/api/auth/refresh" }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
           }
         },
         {
@@ -44,7 +62,171 @@
           "request": {
             "method": "POST",
             "header": [],
-            "url": { "raw": "http://localhost:3001/api/auth/logout" }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exercises",
+      "item": [
+        {
+          "name": "Get Exercises",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises"]
+            }
+          }
+        },
+        {
+          "name": "Get Exercises - No Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises"]
+            }
+          }
+        },
+        {
+          "name": "Create Exercise",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bench Press\",\n  \"type\": \"strength\",\n  \"muscleGroup\": \"chest\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/{{exerciseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "{{exerciseId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Incline Bench Press\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise - No Fields",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/{{exerciseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "{{exerciseId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise - Not Owner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{otherToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/{{exerciseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "{{exerciseId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hacked Exercise\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise - Not Found",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "00000000-0000-0000-0000-000000000000"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ghost Exercise\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Exercise",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/{{exerciseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "{{exerciseId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Exercise - Not Owner",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/{{exerciseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "{{exerciseId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Exercise - Not Found",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercises/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercises", "00000000-0000-0000-0000-000000000000"]
+            }
           }
         }
       ]

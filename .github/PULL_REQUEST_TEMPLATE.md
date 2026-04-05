@@ -10,15 +10,9 @@
 
 <!-- Steps to manually verify this works -->
 
-1.
-2.
-3.
-
-
-## 💥 Breaking Changes
-
-<!-- Does this change any existing API contracts, DB schema, or auth behavior? If yes, describe. -->
-None
+-
+-
+-
 
 ## 📸 Screenshots (if UI change)
 
