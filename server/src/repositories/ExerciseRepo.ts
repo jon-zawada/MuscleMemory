@@ -62,6 +62,9 @@ export class ExerciseRepo {
       setClauses.push(`muscle_group = $${paramIndex++}`);
       params.push(updates.muscleGroup);
     }
+    if (setClauses.length === 0) {
+      return NO_UPDATES;
+    }
     params.push(exerciseId);
     const query = `UPDATE exercises SET ${setClauses.join(", ")} WHERE id = $${paramIndex} RETURNING id, name, type, muscle_group AS "muscleGroup", is_custom AS "isCustom", created_by AS "createdBy"`;
     const result = await this.pool.query(query, params);
