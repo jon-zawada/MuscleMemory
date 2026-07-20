@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Pool } from "pg";
-import { NOT_FOUND, NO_UPDATES, UNAUTHORIZED } from "../constants/repoResults";
+import { z } from "zod";
+import { NOT_FOUND, NO_UPDATES, OK, RepoResult, UNAUTHORIZED } from "../constants/repoResults";
 import { ExerciseLogRepo } from "../repositories/ExerciseLogRepo";
 import { SetRepo } from "../repositories/SetRepo";
 import { WorkoutRepo } from "../repositories/WorkoutRepo";
@@ -20,16 +21,16 @@ class SetController {
   private canAccessExerciseLog = async (
     exerciseLogId: string,
     userId: string,
-  ): Promise<"not_found" | "unauthorized" | "ok"> => {
+  ): Promise<RepoResult> => {
     const exerciseLog = await this.exerciseLogRepo.getByLogId(exerciseLogId);
     if (!exerciseLog) {
-      return "not_found";
+      return NOT_FOUND;
     }
     const workout = await this.workoutRepo.getWorkoutById(exerciseLog.workoutId);
     if (!workout || workout.userId !== userId) {
-      return "unauthorized";
+      return UNAUTHORIZED;
     }
-    return "ok";
+    return OK;
   };
 
   getSets = async (
@@ -43,12 +44,16 @@ class SetController {
         res.status(400).json({ error: "exerciseLogId query param is required" });
         return;
       }
+      if (!z.uuid().safeParse(exerciseLogId).success) {
+        res.status(400).json({ error: "exerciseLogId must be a valid UUID" });
+        return;
+      }
       const access = await this.canAccessExerciseLog(exerciseLogId, userId);
-      if (access === "not_found") {
+      if (access === NOT_FOUND) {
         res.status(404).json({ error: "Exercise log not found" });
         return;
       }
-      if (access === "unauthorized") {
+      if (access === UNAUTHORIZED) {
         res.status(403).json({ error: "Invalid permission" });
         return;
       }
@@ -75,15 +80,15 @@ class SetController {
         completedAt,
       } = req.body;
       const access = await this.canAccessExerciseLog(exerciseLogId, userId);
-      if (access === "not_found") {
+      if (access === NOT_FOUND) {
         res.status(404).json({ error: "Exercise log not found" });
         return;
       }
-      if (access === "unauthorized") {
+      if (access === UNAUTHORIZED) {
         res.status(403).json({ error: "Invalid permission" });
         return;
       }
-      await this.setRepo.createSet(
+      const id = await this.setRepo.createSet(
         exerciseLogId,
         setNumber,
         isWarmup,
@@ -94,7 +99,7 @@ class SetController {
         rpe,
         completedAt,
       );
-      res.status(201).json({ message: "Set created" });
+      res.status(201).json({ message: "Set created", id });
     } catch (error) {
       logger.error("[SERVER]" + error);
       res.status(500).json({ error: "Internal Server error" });

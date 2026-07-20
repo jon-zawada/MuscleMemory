@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { Pool } from "pg";
+import { z } from "zod";
 import { NOT_FOUND, NO_UPDATES, UNAUTHORIZED } from "../constants/repoResults";
 import { ExerciseLogRepo } from "../repositories/ExerciseLogRepo";
+import { ExerciseRepo } from "../repositories/ExerciseRepo";
 import { WorkoutRepo } from "../repositories/WorkoutRepo";
 import { CreateExerciseLogBody, UpdateExerciseLogBody } from "../schemas/exerciseLog.schema";
 import { logger } from "../utils/logger";
@@ -9,9 +11,11 @@ import { logger } from "../utils/logger";
 class ExerciseLogController {
   private exerciseLogRepo: ExerciseLogRepo;
   private workoutRepo: WorkoutRepo;
+  private exerciseRepo: ExerciseRepo;
   constructor(pool: Pool) {
     this.exerciseLogRepo = new ExerciseLogRepo(pool);
     this.workoutRepo = new WorkoutRepo(pool);
+    this.exerciseRepo = new ExerciseRepo(pool);
   }
 
   getExerciseLogs = async (
@@ -23,6 +27,10 @@ class ExerciseLogController {
       const { workoutId } = req.query;
       if (!workoutId) {
         res.status(400).json({ error: "workoutId query param is required" });
+        return;
+      }
+      if (!z.uuid().safeParse(workoutId).success) {
+        res.status(400).json({ error: "workoutId must be a valid UUID" });
         return;
       }
       const workout = await this.workoutRepo.getWorkoutById(workoutId);
@@ -58,8 +66,13 @@ class ExerciseLogController {
         res.status(403).json({ error: "Invalid permission" });
         return;
       }
-      await this.exerciseLogRepo.createLog(workoutId, exerciseId, orderIndex, notes);
-      res.status(201).json({ message: "Exercise log created" });
+      const exercise = await this.exerciseRepo.getVisibleExerciseById(exerciseId, userId);
+      if (!exercise) {
+        res.status(404).json({ error: "Exercise not found" });
+        return;
+      }
+      const id = await this.exerciseLogRepo.createLog(workoutId, exerciseId, orderIndex, notes);
+      res.status(201).json({ message: "Exercise log created", id });
     } catch (error) {
       logger.error("[SERVER]" + error);
       res.status(500).json({ error: "Internal Server error" });
