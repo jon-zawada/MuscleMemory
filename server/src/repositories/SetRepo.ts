@@ -30,9 +30,9 @@ export class SetRepo {
     distanceMeters?: number,
     rpe?: number,
     completedAt?: string,
-  ): Promise<void> => {
-    const query = `INSERT INTO sets (exercise_log_id, set_number, weight_kg, reps, duration_seconds, distance_meters, is_warmup, rpe, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
-    await this.pool.query(query, [
+  ): Promise<string> => {
+    const query = `INSERT INTO sets (exercise_log_id, set_number, weight_kg, reps, duration_seconds, distance_meters, is_warmup, rpe, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`;
+    const result = await this.pool.query(query, [
       exerciseLogId,
       setNumber,
       weightKg,
@@ -43,6 +43,7 @@ export class SetRepo {
       rpe,
       completedAt,
     ]);
+    return result.rows[0].id;
   };
 
   updateSet = async (

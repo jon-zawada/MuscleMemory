@@ -23,9 +23,10 @@ export class ExerciseLogRepo {
     exerciseId: string,
     orderIndex?: number,
     notes?: string,
-  ): Promise<void> => {
-    const query = `INSERT INTO exercise_logs (workout_id, exercise_id, order_index, notes) VALUES ($1, $2, $3, $4)`;
-    await this.pool.query(query, [workoutId, exerciseId, orderIndex, notes]);
+  ): Promise<string> => {
+    const query = `INSERT INTO exercise_logs (workout_id, exercise_id, order_index, notes) VALUES ($1, $2, $3, $4) RETURNING id`;
+    const result = await this.pool.query(query, [workoutId, exerciseId, orderIndex, notes]);
+    return result.rows[0].id;
   };
   updateLog = async (
     logId: string,

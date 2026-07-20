@@ -447,6 +447,539 @@
           }
         }
       ]
+    },
+    {
+      "name": "Exercise Logs",
+      "item": [
+        {
+          "name": "Get Exercise Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs?workoutId={{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"],
+              "query": [{ "key": "workoutId", "value": "{{workoutId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Get Exercise Logs - No Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs?workoutId={{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"],
+              "query": [{ "key": "workoutId", "value": "{{workoutId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Get Exercise Logs - Missing workoutId",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"]
+            }
+          }
+        },
+        {
+          "name": "Get Exercise Logs - Invalid workoutId",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs?workoutId=not-a-uuid",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"],
+              "query": [{ "key": "workoutId", "value": "not-a-uuid" }]
+            }
+          }
+        },
+        {
+          "name": "Get Exercise Logs - Not Owner",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs?workoutId={{workoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"],
+              "query": [{ "key": "workoutId", "value": "{{workoutId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Create Exercise Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workoutId\": \"{{workoutId}}\",\n  \"exerciseId\": \"{{exerciseId}}\",\n  \"orderIndex\": 0,\n  \"notes\": \"First superset\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Exercise Log - Missing exerciseId",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workoutId\": \"{{workoutId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Exercise Log - Workout Not Found",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workoutId\": \"00000000-0000-0000-0000-000000000000\",\n  \"exerciseId\": \"{{exerciseId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Exercise Log - Not Owner",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{otherToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workoutId\": \"{{workoutId}}\",\n  \"exerciseId\": \"{{exerciseId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Exercise Log - Exercise Not Found",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workoutId\": \"{{workoutId}}\",\n  \"exerciseId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise Log",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/{{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "{{exerciseLogId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated notes\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise Log - Empty Body",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/{{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "{{exerciseLogId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise Log - Not Owner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{otherToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/{{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "{{exerciseLogId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Hacked notes\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Exercise Log - Not Found",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "00000000-0000-0000-0000-000000000000"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Ghost log\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Exercise Log",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/{{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "{{exerciseLogId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Exercise Log - Not Owner",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/{{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "{{exerciseLogId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Exercise Log - Not Found",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/exercise-logs/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exercise-logs", "00000000-0000-0000-0000-000000000000"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sets",
+      "item": [
+        {
+          "name": "Get Sets",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets?exerciseLogId={{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"],
+              "query": [{ "key": "exerciseLogId", "value": "{{exerciseLogId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Get Sets - No Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets?exerciseLogId={{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"],
+              "query": [{ "key": "exerciseLogId", "value": "{{exerciseLogId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Get Sets - Missing exerciseLogId",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"]
+            }
+          }
+        },
+        {
+          "name": "Get Sets - Invalid exerciseLogId",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets?exerciseLogId=not-a-uuid",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"],
+              "query": [{ "key": "exerciseLogId", "value": "not-a-uuid" }]
+            }
+          }
+        },
+        {
+          "name": "Get Sets - Not Owner",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets?exerciseLogId={{exerciseLogId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"],
+              "query": [{ "key": "exerciseLogId", "value": "{{exerciseLogId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Create Set",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exerciseLogId\": \"{{exerciseLogId}}\",\n  \"setNumber\": 1,\n  \"isWarmup\": false,\n  \"weightKg\": 60,\n  \"reps\": 8,\n  \"rpe\": 7\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Set - Missing isWarmup",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exerciseLogId\": \"{{exerciseLogId}}\",\n  \"setNumber\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Set - Exercise Log Not Found",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exerciseLogId\": \"00000000-0000-0000-0000-000000000000\",\n  \"setNumber\": 1,\n  \"isWarmup\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Set - Not Owner",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{otherToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exerciseLogId\": \"{{exerciseLogId}}\",\n  \"setNumber\": 1,\n  \"isWarmup\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Set",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/{{setId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "{{setId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reps\": 10,\n  \"weightKg\": 65\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Set - Empty Body",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/{{setId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "{{setId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Update Set - Not Owner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{otherToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/{{setId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "{{setId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reps\": 99\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Set - Not Found",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "00000000-0000-0000-0000-000000000000"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reps\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Set",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/{{setId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "{{setId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Set - Not Owner",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/{{setId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "{{setId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Set - Not Found",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/sets/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sets", "00000000-0000-0000-0000-000000000000"]
+            }
+          }
+        }
+      ]
     }
   ]
 }

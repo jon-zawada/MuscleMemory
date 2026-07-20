@@ -20,6 +20,15 @@ export class ExerciseRepo {
     return result.rows[0];
   };
 
+  getVisibleExerciseById = async (
+    exerciseId: string,
+    userId: string,
+  ): Promise<Exercise | undefined> => {
+    const query = `SELECT id, name, type, muscle_group AS "muscleGroup", is_custom AS "isCustom", created_by AS "createdBy" FROM exercises WHERE id = $1 AND (is_custom = false OR created_by = $2)`;
+    const result = await this.pool.query(query, [exerciseId, userId]);
+    return result.rows[0];
+  };
+
   createExercise = async (
     name: string,
     type: ExerciseType,

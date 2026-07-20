@@ -3,7 +3,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import pool from "./db";
 import authRouter from "./routes/authRoutes";
+import exerciseLogRoutes from "./routes/exerciseLogRoutes";
 import exerciseRouter from "./routes/exerciseRoutes";
+import setRoutes from "./routes/setRoutes";
 import workoutRoutes from "./routes/workoutRoutes";
 import { logger } from "./utils/logger";
 
@@ -23,6 +25,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/exercises", exerciseRouter);
 app.use("/api/workouts", workoutRoutes);
+app.use("/api/exercise-logs", exerciseLogRoutes);
+app.use("/api/sets", setRoutes);
 
 const start = async (): Promise<void> => {
   await pool.query("SELECT 1");
