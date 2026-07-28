@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@theme {
+  --color-base: #0f1113;
+  --color-surface: #25282e;
+  --color-positive: #c9f179;
+  --color-warning: #f5a623;
+}
+
+@layer base {
+  body {
+    @apply bg-base text-white;
+  }
+}
