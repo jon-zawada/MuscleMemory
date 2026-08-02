@@ -1,9 +1,9 @@
 @import "tailwindcss";
 @theme {
-  --color-base: #0f1113;
-  --color-surface: #25282e;
-  --color-positive: #c9f179;
-  --color-warning: #f5a623;
+  --color-base: #0F1113;
+  --color-surface: #25282E;
+  --color-positive: #BEF264;
+  --color-warning: #F5A623;
 }
 
 @layer base {
