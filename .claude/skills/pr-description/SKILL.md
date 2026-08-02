@@ -33,11 +33,27 @@ As of writing it has three sections:
   or describing what a screenshot would show. Only include this section's
   content requirement if the diff actually touches UI.
 
+## Verify against the issue
+
+Before writing the description, identify the GitHub issue this PR solves —
+usually the branch name matches the `MUS-##` numbering (e.g. branch `MUS-53`
+→ issue #53), otherwise check what was discussed/created earlier in the
+conversation. Run `gh issue view <N>` and actually read its body/scope.
+
+Compare the issue's stated requirements against what's in the diff:
+
+- If everything in the issue is covered, add `Closes #N` and move on.
+- If something in the issue is missing from the diff, say so explicitly
+  before producing the description — don't silently write `Closes #N` on a
+  PR that doesn't fully close it, and don't silently drop the gap either.
+  Ask whether the missing piece is out of scope for this PR (in which case
+  it needs its own follow-up issue, same as prior scope-narrowing decisions
+  in this repo) or whether it should be finished before the description is
+  written.
+- Never guess an issue number if the mapping isn't actually clear.
+
 ## Other conventions to apply
 
-- If the diff maps cleanly to an open GitHub issue (e.g. branch name or an
-  issue created earlier in this conversation), add `Closes #N` — but only
-  when actually confident of the mapping, never guess an issue number.
 - Never run `gh pr create` or `gh pr merge` as part of this skill — only
   produce the filled-out template text for the user to review. Creating or
   merging the PR requires the user to explicitly ask separately, per standing

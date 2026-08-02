@@ -6,4 +6,6 @@ coverage/
 plan.md
 .env
 techdebt.md
+front-end-plan.md
+/design-reference
 .DS_Store
