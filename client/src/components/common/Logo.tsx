@@ -9,7 +9,7 @@ export const Logo = (): JSX.Element => {
       >
         M
       </div>
-      <div className="font-bold uppercase text-2xl">Muscle Memory</div>
+      <div className="font-bold uppercase text-2xl font-display">Muscle Memory</div>
     </div>
   );
 };

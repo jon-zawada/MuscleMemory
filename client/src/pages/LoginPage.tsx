@@ -38,7 +38,7 @@ const LoginPage = (): JSX.Element => {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col">
-        <h1 className="text-4xl font-bold leading-tight">Welcome back.</h1>
+        <h1 className="text-4xl font-bold leading-tight font-display">Welcome back.</h1>
         <p className="mt-2 text-muted">Pick up where the last session left off.</p>
       </div>
       <form className="flex flex-col gap-8" onSubmit={submitHandler}>
