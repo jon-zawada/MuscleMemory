@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { type JSX, createContext, useContext, useEffect, useState } from "react";
 import apiClient from "../api/apiClient";
 import type { User } from "../types/user";
+import { tokenStore } from "./tokenStore";
 
 interface AuthContextType {
   user: User | null;
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const login = (token: string): void => {
+    tokenStore.set(token);
     setAccessToken(token);
     const decodedToken = jwtDecode<User>(token);
     setUser(decodedToken);
@@ -27,6 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
   const logout = async (): Promise<void> => {
     try {
       await apiClient.post("/auth/logout");
+      tokenStore.set(null);
       setUser(null);
       setAccessToken(null);
     } catch (error) {
