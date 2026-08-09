@@ -3,9 +3,15 @@ import { useNavigate } from "react-router-dom";
 import apiClient from "../api/apiClient";
 import { Button } from "../components/common/Button";
 import { useAuth } from "../context/AuthContext";
+import type { UserRole } from "../types/user";
 
 const SignupPage = (): JSX.Element => {
-  const [inputs, setInputs] = useState({ email: "", username: "", password: "", role: "athlete" });
+  const [inputs, setInputs] = useState<{
+    email: string;
+    username: string;
+    password: string;
+    role: UserRole;
+  }>({ email: "", username: "", password: "", role: "athlete" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
