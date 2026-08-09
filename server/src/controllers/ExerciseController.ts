@@ -29,8 +29,14 @@ class ExerciseController {
     try {
       const { name, type, muscleGroup } = req.body;
       const userId = req.user!.id;
-      await this.exerciseRepo.createExercise(name, type, true, userId, muscleGroup);
-      res.status(201).json({ message: "Exercise created" });
+      const exerciseId = await this.exerciseRepo.createExercise(
+        name,
+        type,
+        true,
+        userId,
+        muscleGroup,
+      );
+      res.status(201).json({ message: "Exercise created", exerciseId });
     } catch (error) {
       logger.error("[SERVER]" + error);
       res.status(500).json({ error: "Internal Server error" });

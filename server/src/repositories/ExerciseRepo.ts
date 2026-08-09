@@ -35,9 +35,10 @@ export class ExerciseRepo {
     isCustom: boolean,
     userId: string,
     muscleGroup?: string,
-  ): Promise<void> => {
-    const query = `INSERT INTO exercises (name, type, muscle_group, is_custom, created_by) VALUES ($1, $2, $3, $4, $5)`;
-    await this.pool.query(query, [name, type, muscleGroup, isCustom, userId]);
+  ): Promise<string> => {
+    const query = `INSERT INTO exercises (name, type, muscle_group, is_custom, created_by) VALUES ($1, $2, $3, $4, $5) RETURNING id`;
+    const result = await this.pool.query(query, [name, type, muscleGroup, isCustom, userId]);
+    return result.rows[0].id;
   };
 
   updateExercise = async (

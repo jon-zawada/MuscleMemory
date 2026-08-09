@@ -27,9 +27,17 @@ export class WorkoutRepo {
     assignedBy?: string,
     notes?: string,
     completedAt?: string,
-  ): Promise<void> => {
-    const query = `INSERT INTO workouts (user_id, status, name, assigned_by, notes, completed_at) VALUES ($1, $2, $3, $4, $5, $6)`;
-    await this.pool.query(query, [userId, status, name, assignedBy, notes, completedAt]);
+  ): Promise<string> => {
+    const query = `INSERT INTO workouts (user_id, status, name, assigned_by, notes, completed_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`;
+    const result = await this.pool.query(query, [
+      userId,
+      status,
+      name,
+      assignedBy,
+      notes,
+      completedAt,
+    ]);
+    return result.rows[0].id;
   };
 
   updateWorkoutById = async (

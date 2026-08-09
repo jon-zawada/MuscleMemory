@@ -29,8 +29,15 @@ class WorkoutController {
     try {
       const { name, status, assignedBy, notes, completedAt } = req.body;
       const userId = req.user!.id;
-      await this.workoutRepo.createWorkout(userId, status, name, assignedBy, notes, completedAt);
-      res.status(201).json({ message: "Workout created" });
+      const workoutId = await this.workoutRepo.createWorkout(
+        userId,
+        status,
+        name,
+        assignedBy,
+        notes,
+        completedAt,
+      );
+      res.status(201).json({ message: "Workout created", workoutId });
     } catch (error) {
       logger.error("[SERVER]" + error);
       res.status(500).json({ error: "Internal Server error" });
