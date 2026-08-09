@@ -6,6 +6,7 @@ import type { User } from "../types/user";
 interface AuthContextType {
   user: User | null;
   accessToken: string | null;
+  isLoading: boolean;
   login: (token: string) => void;
   logout: () => Promise<void>;
 }
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const login = (token: string): void => {
     setAccessToken(token);
@@ -40,13 +42,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.E
         login(token);
       } catch (error) {
         // network error, do nothing
+      } finally {
+        setIsLoading(false);
       }
     };
     silentRefresh();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, login, logout }}>
+    <AuthContext.Provider value={{ user, accessToken, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
