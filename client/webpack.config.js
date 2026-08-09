@@ -32,6 +32,10 @@ module.exports = (env, argv) => {
           type: "asset",
         },
         {
+          test: /\.(woff2?|ttf|otf)$/i, //fonts
+          type: "asset/resource",
+        },
+        {
           test: /\.css$/i,
           use: ["style-loader", "css-loader", "postcss-loader"],
         },

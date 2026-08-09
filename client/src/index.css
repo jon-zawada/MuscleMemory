@@ -1,9 +1,17 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/inter-tight";
+@import "@fontsource-variable/jetbrains-mono";
+
 @theme {
-  --color-base: #0F1113;
-  --color-surface: #25282E;
-  --color-positive: #BEF264;
-  --color-warning: #F5A623;
+  --color-base: #0f1113;
+  --color-surface: #24282e;
+  --color-positive: #bef264;
+  --color-warning: #f5a623;
+  --color-muted: #94a3b8;
+  --font-sans: "Inter Variable", sans-serif;
+  --font-display: "Inter Tight Variable", sans-serif;
+  --font-mono: "JetBrains Mono Variable", monospace;
 }
 
 @layer base {
