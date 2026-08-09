@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { PageLayout } from "./components/common/PageLayout";
-import ActiveWorkoutPage from "./pages/ActiveWorkoutPage";
+// import ActiveWorkoutPage from "./pages/ActiveWorkoutPage";
 import CoachDashboardPage from "./pages/CoachDashboardPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
@@ -18,7 +18,7 @@ const App = (): JSX.Element => (
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/coach/dashboard" element={<CoachDashboardPage />} />
-        <Route path="/workouts/new" element={<ActiveWorkoutPage />} />
+        {/* <Route path="/workouts/new" element={<ActiveWorkoutPage />} /> */}
       </Route>
     </Routes>
   </BrowserRouter>
