@@ -1,8 +1,9 @@
 import { type JSX, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getExercises } from "../api/exerciseApi";
 import { createExerciseLog, getExerciseLogs } from "../api/exerciseLogApi";
-import { completeSet, createSet, getSets, updateSet } from "../api/setsApi";
-import { createWorkout, getWorkouts } from "../api/workoutApi";
+import { createSet, getSets, updateSet } from "../api/setsApi";
+import { createWorkout, getWorkouts, updateWorkout } from "../api/workoutApi";
 import type { Exercise } from "../types/exercise";
 import type { ExerciseLog } from "../types/exerciseLog";
 import type { Set } from "../types/set";
@@ -13,6 +14,8 @@ const ActiveWorkoutPage = (): JSX.Element => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sets, setSets] = useState<Set[]>([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const init = async (): Promise<void> => {
@@ -91,6 +94,15 @@ const ActiveWorkoutPage = (): JSX.Element => {
     setSets((prev) => prev.map((s) => (s.id === setId ? { ...s, ...patch } : s)));
   };
 
+  const finishWorkout = async (): Promise<void> => {
+    if (!activeWorkoutId) return;
+    await updateWorkout(activeWorkoutId, {
+      status: "completed",
+      completedAt: new Date().toISOString(),
+    });
+    navigate("/dashboard");
+  };
+
   return (
     <div>
       <h2>Pick an exercise</h2>
@@ -163,6 +175,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
           <button onClick={addSet}>+ Add Set</button>
         </div>
       )}
+      <button onClick={finishWorkout}>Finish Workout</button>
     </div>
   );
 };

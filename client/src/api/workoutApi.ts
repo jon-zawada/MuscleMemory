@@ -20,6 +20,10 @@ export const createWorkout = async (input: CreateWorkoutInput): Promise<string> 
   return workoutId;
 };
 
-// const updateWorkout = () => {
-
-// }
+export const updateWorkout = async (
+  workoutId: string,
+  updates: Partial<{ status: WorkoutStatus; completedAt: string; name: string; notes: string }>,
+): Promise<Workout> => {
+  const response = await apiClient.patch(`/workouts/${workoutId}`, updates);
+  return response.data.workout;
+};
