@@ -1,10 +1,17 @@
 ---
 name: pr-description
-description: In this repo, use when the user asks for "a PR description" of their working changes. Fills out .github/PULL_REQUEST_TEMPLATE.md from the actual diff — never invents a PR from memory or from what was merely discussed in conversation.
+description: In this repo, use when the user asks for "a PR description" of their working changes. Outputs a filled-out PR description in the chat response, structured from .github/PULL_REQUEST_TEMPLATE.md, based on the actual diff — never invents a PR from memory or from what was merely discussed in conversation.
 ---
 
-Fill out `.github/PULL_REQUEST_TEMPLATE.md` for the current work, based only on
-real diff content.
+Produce a filled-out PR description **in the chat response only**, structured
+using `.github/PULL_REQUEST_TEMPLATE.md`'s sections, based only on real diff
+content.
+
+**Never write to `.github/PULL_REQUEST_TEMPLATE.md` itself.** It's the blank
+template every future PR fills out — it must stay untouched. Read it for
+structure/section names only, then output the filled-in version as a markdown
+code block (or plain markdown) in your reply so the user can paste it into
+GitHub themselves.
 
 ## Which diff to use
 
@@ -13,15 +20,19 @@ plus `git status` for anything uncommitted). If the user already narrowed the
 scope in this conversation (e.g. "staged changes," "my last commit"), use that
 scope instead — don't silently widen it back to the whole branch.
 
-## Filling out the template
+## Filling out the description
 
-Read `.github/PULL_REQUEST_TEMPLATE.md` fresh each time in case it changes.
-As of writing it has three sections:
+Read `.github/PULL_REQUEST_TEMPLATE.md` fresh each time in case it changes,
+to get the current section headers — but only ever as a reference for what to
+output in chat, never as a file to edit. As of writing it has three sections:
 
 - **📋 Description** — what changed and why, in prose or short bullets.
   Ground every line in something actually present in the diff. If a file was
   discussed earlier in the conversation but isn't in the diff, it doesn't go
-  in the description.
+  in the description. Always end this section with a `Closes #N` line
+  whenever the "Verify against the issue" step below identifies a matching
+  issue — this is not optional, don't forget it just because the rest of the
+  description is done.
 - **🧪 How to Test** — manual, functional verification steps only. **Do not
   include generic project-wide checks** like `npm run lint`, `npx tsc --noEmit`,
   or running the test suite — those are assumed/CI-covered, not what this
@@ -35,10 +46,12 @@ As of writing it has three sections:
 
 ## Verify against the issue
 
-Before writing the description, identify the GitHub issue this PR solves —
-usually the branch name matches the `MUS-##` numbering (e.g. branch `MUS-53`
-→ issue #53), otherwise check what was discussed/created earlier in the
-conversation. Run `gh issue view <N>` and actually read its body/scope.
+Always run this step, every time — don't skip straight to writing the
+description. Before writing the description, identify the GitHub issue this
+PR solves — usually the branch name matches the `MUS-##` numbering (e.g.
+branch `MUS-53` → issue #53), otherwise check what was discussed/created
+earlier in the conversation. Run `gh issue view <N>` and actually read its
+body/scope.
 
 Compare the issue's stated requirements against what's in the diff:
 
