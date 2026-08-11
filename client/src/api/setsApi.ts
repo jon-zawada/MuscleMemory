@@ -1,7 +1,7 @@
-import type { Set } from "../types/set";
+import type { WorkoutSet } from "../types/set";
 import apiClient from "./apiClient";
 
-export const getSets = async (exerciseLogId: string): Promise<Set[]> => {
+export const getSets = async (exerciseLogId: string): Promise<WorkoutSet[]> => {
   const response = await apiClient.get(`/sets?exerciseLogId=${exerciseLogId}`);
   return response.data.sets;
 };
@@ -20,7 +20,7 @@ export const createSet = async (input: CreateSetInput): Promise<string> => {
   return response.data.id;
 };
 
-export const completeSet = async (setId: string): Promise<Set> => {
+export const completeSet = async (setId: string): Promise<WorkoutSet> => {
   const response = await apiClient.patch(`/sets/${setId}`, {
     completedAt: new Date().toISOString(),
   });
@@ -35,7 +35,7 @@ type UpdateSetInput = Partial<{
   completedAt: string;
 }>;
 
-export const updateSet = async (setId: string, updates: UpdateSetInput): Promise<Set> => {
+export const updateSet = async (setId: string, updates: UpdateSetInput): Promise<WorkoutSet> => {
   const response = await apiClient.patch(`/sets/${setId}`, updates);
   return response.data.set;
 };

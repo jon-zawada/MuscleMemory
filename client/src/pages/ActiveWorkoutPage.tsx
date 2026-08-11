@@ -6,7 +6,7 @@ import { createSet, getSets, updateSet } from "../api/setsApi";
 import { createWorkout, getWorkouts, updateWorkout } from "../api/workoutApi";
 import type { Exercise } from "../types/exercise";
 import type { ExerciseLog } from "../types/exerciseLog";
-import type { Set } from "../types/set";
+import type { WorkoutSet } from "../types/set";
 import type { WorkoutStatus } from "../types/workout";
 
 const ActiveWorkoutPage = (): JSX.Element => {
@@ -14,7 +14,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [sets, setSets] = useState<Set[]>([]);
+  const [sets, setSets] = useState<WorkoutSet[]>([]);
   const [workoutStatus, setWorkoutStatus] = useState<WorkoutStatus>("in_progress");
   const [isFinishing, setIsFinishing] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
@@ -85,7 +85,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
     ]);
   };
 
-  const markSetComplete = async (set: Set): Promise<void> => {
+  const markSetComplete = async (set: WorkoutSet): Promise<void> => {
     const updated = await updateSet(set.id, {
       ...(set.weightKg != null && { weightKg: set.weightKg }),
       ...(set.reps != null && { reps: set.reps }),
@@ -95,7 +95,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
     setSets((prev) => prev.map((s) => (s.id === set.id ? updated : s)));
   };
 
-  const updateLocalSet = (setId: string, patch: Partial<Set>): void => {
+  const updateLocalSet = (setId: string, patch: Partial<WorkoutSet>): void => {
     setSets((prev) => prev.map((s) => (s.id === setId ? { ...s, ...patch } : s)));
   };
 
@@ -118,7 +118,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
     }
   };
 
-  const persistSet = async (set: Set): Promise<void> => {
+  const persistSet = async (set: WorkoutSet): Promise<void> => {
     await updateSet(set.id, {
       ...(set.weightKg != null && { weightKg: set.weightKg }),
       ...(set.reps != null && { reps: set.reps }),
