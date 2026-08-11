@@ -7,7 +7,7 @@ type CreateWorkoutInput = {
   assignedBy?: string;
   notes?: string;
   completedAt?: string;
-}; //move to types
+};
 
 export const getWorkouts = async (): Promise<Workout[]> => {
   const response = await apiClient.get("/workouts");

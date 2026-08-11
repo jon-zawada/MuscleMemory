@@ -7,6 +7,7 @@ import { createWorkout, getWorkouts, updateWorkout } from "../api/workoutApi";
 import type { Exercise } from "../types/exercise";
 import type { ExerciseLog } from "../types/exerciseLog";
 import type { Set } from "../types/set";
+import type { WorkoutStatus } from "../types/workout";
 
 const ActiveWorkoutPage = (): JSX.Element => {
   const [activeWorkoutId, setActiveWorkoutId] = useState<string | null>(null);
@@ -14,6 +15,9 @@ const ActiveWorkoutPage = (): JSX.Element => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sets, setSets] = useState<Set[]>([]);
+  const [workoutStatus, setWorkoutStatus] = useState<WorkoutStatus>("in_progress");
+  const [isFinishing, setIsFinishing] = useState(false);
+  const [finishError, setFinishError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -24,8 +28,9 @@ const ActiveWorkoutPage = (): JSX.Element => {
       const workoutId = inProgress
         ? inProgress.id
         : await createWorkout({ status: "in_progress", name: "Test Workout" });
-
+      const status = inProgress ? inProgress.status : "in_progress";
       setActiveWorkoutId(workoutId);
+      setWorkoutStatus(status);
 
       const logs = await getExerciseLogs(workoutId);
       setExerciseLogs(logs);
@@ -95,12 +100,30 @@ const ActiveWorkoutPage = (): JSX.Element => {
   };
 
   const finishWorkout = async (): Promise<void> => {
-    if (!activeWorkoutId) return;
-    await updateWorkout(activeWorkoutId, {
-      status: "completed",
-      completedAt: new Date().toISOString(),
+    if (!activeWorkoutId || workoutStatus !== "in_progress" || isFinishing) return;
+
+    setIsFinishing(true);
+    setFinishError(null);
+    try {
+      await updateWorkout(activeWorkoutId, {
+        status: "completed",
+        completedAt: new Date().toISOString(),
+      });
+      setWorkoutStatus("completed");
+      navigate("/dashboard");
+    } catch (error) {
+      setFinishError("Couldn't finish workout. Try again.");
+    } finally {
+      setIsFinishing(false);
+    }
+  };
+
+  const persistSet = async (set: Set): Promise<void> => {
+    await updateSet(set.id, {
+      ...(set.weightKg != null && { weightKg: set.weightKg }),
+      ...(set.reps != null && { reps: set.reps }),
+      ...(set.rpe != null && { rpe: set.rpe }),
     });
-    navigate("/dashboard");
   };
 
   return (
@@ -145,6 +168,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
                       value={set.weightKg ?? ""}
                       disabled={!!set.completedAt}
                       onChange={(e) => updateLocalSet(set.id, { weightKg: Number(e.target.value) })}
+                      onBlur={() => persistSet(set)}
                     />
                   </td>
                   <td>
@@ -153,6 +177,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
                       value={set.reps ?? ""}
                       disabled={!!set.completedAt}
                       onChange={(e) => updateLocalSet(set.id, { reps: Number(e.target.value) })}
+                      onBlur={() => persistSet(set)}
                     />
                   </td>
                   <td>
@@ -161,6 +186,7 @@ const ActiveWorkoutPage = (): JSX.Element => {
                       value={set.rpe ?? ""}
                       disabled={!!set.completedAt}
                       onChange={(e) => updateLocalSet(set.id, { rpe: Number(e.target.value) })}
+                      onBlur={() => persistSet(set)}
                     />
                   </td>
                   <td>
@@ -175,7 +201,10 @@ const ActiveWorkoutPage = (): JSX.Element => {
           <button onClick={addSet}>+ Add Set</button>
         </div>
       )}
-      <button onClick={finishWorkout}>Finish Workout</button>
+      <button onClick={finishWorkout} disabled={isFinishing || workoutStatus !== "in_progress"}>
+        {isFinishing ? "Finishing..." : "Finish Workout"}
+      </button>
+      {finishError && <p role="alert">{finishError}</p>}
     </div>
   );
 };
