@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import { NOT_FOUND, NO_UPDATES, OK, RepoResult, UNAUTHORIZED } from "../constants/repoResults";
-import { Set } from "../types/set";
+import { WorkoutSet } from "../types/set";
 
 export class SetRepo {
   private pool: Pool;
@@ -8,13 +8,13 @@ export class SetRepo {
     this.pool = pool;
   }
 
-  getAllByExerciseLogId = async (exerciseLogId: string): Promise<Set[]> => {
+  getAllByExerciseLogId = async (exerciseLogId: string): Promise<WorkoutSet[]> => {
     const query = `SELECT id, exercise_log_id as "exerciseLogId", set_number AS "setNumber", weight_kg AS "weightKg", reps, duration_seconds AS "durationSeconds", distance_meters AS "distanceMeters", is_warmup AS "isWarmup", rpe, completed_at AS "completedAt" FROM sets WHERE exercise_log_id = $1`;
     const result = await this.pool.query(query, [exerciseLogId]);
     return result.rows;
   };
 
-  getBySetId = async (setId: string): Promise<Set | undefined> => {
+  getBySetId = async (setId: string): Promise<WorkoutSet | undefined> => {
     const query = `SELECT id, exercise_log_id as "exerciseLogId", set_number AS "setNumber", weight_kg AS "weightKg", reps, duration_seconds AS "durationSeconds", distance_meters AS "distanceMeters", is_warmup AS "isWarmup", rpe, completed_at AS "completedAt" FROM sets WHERE id = $1`;
     const result = await this.pool.query(query, [setId]);
     return result.rows[0];
@@ -51,7 +51,7 @@ export class SetRepo {
     userId: string,
     updates: Partial<
       Pick<
-        Set,
+        WorkoutSet,
         | "setNumber"
         | "weightKg"
         | "reps"
@@ -62,7 +62,7 @@ export class SetRepo {
         | "completedAt"
       >
     >,
-  ): Promise<Set | RepoResult> => {
+  ): Promise<WorkoutSet | RepoResult> => {
     if (Object.keys(updates).length === 0) {
       return NO_UPDATES;
     }

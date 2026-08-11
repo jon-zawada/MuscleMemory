@@ -1,4 +1,4 @@
-export interface Set {
+export interface WorkoutSet {
   id: string;
   exerciseLogId: string;
   setNumber: number;
